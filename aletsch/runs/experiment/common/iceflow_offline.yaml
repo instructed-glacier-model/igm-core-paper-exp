@@ -1,0 +1,18 @@
+# @package _global_
+#
+# Offline ice-flow emulator: pretrained dahunet_mini (shipped with IGM), frozen.
+processes:
+  iceflow:
+    method: unified
+    numerics:
+      Nz: 2
+      basis_horizontal: q1
+      basis_vertical: molho
+    unified:
+      mapping: network
+      inputs: [thk, usurf, arrhenius, tau_ref, dX]
+      nbit_init: 0
+      retrain_freq: 0
+      network:
+        pretrained_path: "dahunet_mini.keras"
+        pretrained: true

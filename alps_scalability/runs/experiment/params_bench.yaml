@@ -1,0 +1,95 @@
+# @package _global_
+#
+# Scalability sweep, ONLINE ice flow (repro/13 reruns it with Nz = 10 Lagrange): the 500-yr Alps run (ice-free
+# start, ELA lowered to 2300 m) on one grid per coarsening ratio of the 9020 x 6020 @ 100 m bed;
+# tools/run_sweep.py sets the ratio per run.
+# Full frame: the whole grid is one window (framesizemax > Nx). The network (dahunet 6 x 24) starts from a
+# seeded random initialisation (user module bench_seed) and is retrained with one Adam iteration per step.
+
+core:
+  url_data: ""
+  logging: True
+  tf_logging_level: 30
+  print_comp: True          # -> computational-statistics.txt (per-module mean/total)
+
+defaults:
+  - /user/conf/processes@processes.bench_seed: bench_seed
+  - /user/conf/processes@processes.bench_timer: bench_timer
+  - /user/conf/processes@processes.bench_sync_flow: bench_sync_flow
+  - /user/conf/processes@processes.bench_sync_thk: bench_sync_thk
+  - override /inputs:
+    - local
+  - override /processes:
+    - bench_seed             # seed + op-determinism before iceflow builds the network -> reproducible runs
+    - smb
+    - iceflow
+    - bench_sync_flow        # waits for the GPU: IGM's module timers do not, and iceflow leaves its last
+                             # GPU work in flight; run_sweep.py adds this probe's time to iceflow
+    - time
+    - thk
+    - bench_sync_thk         # same for thk
+    - bench_timer            # per-step timings -> bench_steptimes.json, memory -> bench_memory.json
+  - override /outputs:
+    - local
+
+inputs:
+  local:
+    # topg + zero thk (tools/make_input.py)
+    filename: ${hydra:runtime.cwd}/data/input_bench.nc
+    coarsening:
+      ratio: 1               # set by run_sweep.py; 1 -> 9020 x 6020 @ 100 m
+
+processes:
+
+  time:
+    start: 0.0
+    end: 500.0
+    save: 1000.0            # save > end -> a single output at the end
+    cfl: 0.3
+    cfl_percentile: 100.0   # CFL time step from the maximum velocity
+    step_max: 1.0
+
+  smb:
+    method: simple
+    simple:
+      array:
+        - ['time', 'gradabl', 'gradacc', 'ela', 'accmax']
+        - [0,   0.009, 0.005, 2300, 2.0]
+        - [500, 0.009, 0.005, 2300, 2.0]
+
+  iceflow:
+    method: unified
+    numerics:                # Nz = 2 MOLHO, as every run of this experiment; cell-centred quadrature (IGM
+      Nz: 2                  # default) for the online network, Q1 for the pretrained offline network
+      basis_horizontal: central
+      basis_vertical: molho
+    physics:
+      sliding:               # IGM default drag, as every run of this experiment
+        u_ref: 100.0
+        tau_ref: 0.2153697218796329
+    unified:
+      mapping: network
+      network:
+        pretrained: false
+        architecture: dahunet
+        params:
+          backend: cnn
+          features: [dsdx, dsdy, grad_s, u_sia, u_weertman]
+          nb_out_filter: 24
+          nb_layers: 6
+          conv_ker_size: 3
+          residual: true
+      optimizer: adam
+      adam:
+        lr: 5.0e-04
+        lr_init: 1.0e-03
+      nbit_warmup: -1
+      nbit_init: 0
+      nbit: 1
+      retrain_freq: 1        # retrain every step
+      data_preparation:
+        framesizemax: 10000  # > Nx (9020 at ratio 1) -> one window = full frame
+
+outputs:
+  local:
+    vars_to_save: [usurf, thk, velsurf_mag]

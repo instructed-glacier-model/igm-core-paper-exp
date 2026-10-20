@@ -1,0 +1,78 @@
+# @package _global_
+#
+# Scalability sweep, OFFLINE ice flow: identical to params_bench.yaml (domain, grids, forcing, CFL, timing
+# probes) except the ice-flow block: the pretrained network dahunet_mini shipped with IGM (MOLHO, Nz = 2),
+# frozen, inference only.
+
+core:
+  url_data: ""
+  logging: True
+  tf_logging_level: 30
+  print_comp: True          # -> computational-statistics.txt (per-module mean/total)
+
+defaults:
+  - /user/conf/processes@processes.bench_timer: bench_timer
+  - /user/conf/processes@processes.bench_sync_flow: bench_sync_flow
+  - /user/conf/processes@processes.bench_sync_thk: bench_sync_thk
+  - override /inputs:
+    - local
+  - override /processes:
+    - smb
+    - iceflow
+    - bench_sync_flow        # waits for the GPU (see params_bench.yaml)
+    - time
+    - thk
+    - bench_sync_thk
+    - bench_timer            # per-step timings -> bench_steptimes.json, memory -> bench_memory.json
+  - override /outputs:
+    - local
+
+inputs:
+  local:
+    # topg + zero thk (tools/make_input.py)
+    filename: ${hydra:runtime.cwd}/data/input_bench.nc
+    coarsening:
+      ratio: 1               # set by run_sweep.py; 1 -> 9020 x 6020 @ 100 m
+
+processes:
+
+  time:
+    start: 0.0
+    end: 500.0
+    save: 1000.0            # save > end -> a single output at the end
+    cfl: 0.3
+    cfl_percentile: 100.0   # CFL time step from the maximum velocity
+    step_max: 1.0
+
+  smb:
+    method: simple
+    simple:
+      array:
+        - ['time', 'gradabl', 'gradacc', 'ela', 'accmax']
+        - [0,   0.009, 0.005, 2300, 2.0]
+        - [500, 0.009, 0.005, 2300, 2.0]
+
+  iceflow:
+    method: unified
+    numerics:
+      Nz: 2
+      basis_horizontal: q1
+      basis_vertical: molho
+    physics:
+      sliding:
+        u_ref: 100.0                    # the network was trained with these values
+        tau_ref: 0.2153697218796329     # (same drag as params_bench.yaml)
+    unified:
+      mapping: network
+      inputs: [thk, usurf, arrhenius, tau_ref, dX]
+      nbit_init: 0
+      retrain_freq: 0                   # never retrained
+      network:
+        pretrained_path: "dahunet_mini.keras"
+        pretrained: true
+      data_preparation:
+        framesizemax: 10000             # > Nx -> one window = full frame
+
+outputs:
+  local:
+    vars_to_save: [usurf, thk, velsurf_mag]

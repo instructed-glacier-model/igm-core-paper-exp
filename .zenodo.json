@@ -1,0 +1,17 @@
+{
+  "title": "Experiments of the IGM v3.2.1 model description paper (GMD)",
+  "upload_type": "software",
+  "description": "Configuration files, user modules, scripts and data to reproduce the experiments and figures of the IGM v3.2.1 model description paper submitted to Geoscientific Model Development: calibration of Aletsch Glacier (1880–2020), scalability test over the Alps, thermal calibration of Drønbreen (Svalbard), and the ISMIP-HOM B and Kleiner et al. (2015) A/B benchmarks.",
+  "creators": [
+    {"name": "Jouvet, Guillaume", "affiliation": "Université de Lausanne"},
+    {"name": "Finley, Brandon D.", "affiliation": "Université de Lausanne"},
+    {"name": "Gregov, Thomas", "affiliation": "Université de Lausanne"},
+    {"name": "Rosier, Sebastian H. R.", "affiliation": "Universität Zürich"},
+    {"name": "Bacchin, Lucie", "affiliation": "Universidad Politécnica de Madrid; University Centre in Svalbard (UNIS)"}
+  ],
+  "license": "gpl-3.0-only",
+  "keywords": ["glacier modelling", "ice flow", "IGM", "GPU", "Geoscientific Model Development"],
+  "related_identifiers": [
+    {"identifier": "10.5281/zenodo.23398788", "relation": "requires", "scheme": "doi"}
+  ]
+}

@@ -1,0 +1,34 @@
+# @package _global_
+# ONLINE ice flow for the accuracy runs: the same dahunet 6 x 24 as the scalability sweep, 2000 initial
+# Adam iterations, then 1 iteration at every step (retrain_freq: 1, as in the scalability sweep).
+# Seeded by the user module bench_seed (params_warm_online.yaml).
+processes:
+  iceflow:
+    method: unified
+    numerics:
+      Nz: 2
+      basis_horizontal: central   # cell-centred quadrature (IGM default), as in the scalability sweep
+      basis_vertical: molho
+    unified:
+      mapping: network
+      inputs: [thk, usurf, arrhenius, tau_ref, dX]
+      optimizer: adam
+      adam:
+        lr: 5.0e-04
+        lr_init: 1.0e-03
+      nbit_init: 2000
+      nbit: 1
+      nbit_warmup: -1
+      retrain_freq: 1
+      network:
+        pretrained: false
+        architecture: dahunet
+        params:
+          backend: cnn
+          features: [dsdx, dsdy, grad_s, u_sia, u_weertman]
+          nb_out_filter: 24
+          nb_layers: 6
+          conv_ker_size: 3
+          residual: true
+      data_preparation:
+        framesizemax: 99999

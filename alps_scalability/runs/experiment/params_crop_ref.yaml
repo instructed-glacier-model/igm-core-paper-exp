@@ -1,0 +1,10 @@
+# @package _global_
+# Accuracy check, REFERENCE: the 160 x 134 km sub-domain from ice-free, 0 -> 500 yr, IGM's direct solver.
+defaults:
+  - common: [crop_base, iceflow_reference]
+  - /user/conf/processes@processes.bench_timer: bench_timer
+  - /user/conf/processes@processes.bench_sync_flow: bench_sync_flow
+  - /user/conf/processes@processes.bench_sync_thk: bench_sync_thk
+  - override /inputs: [local]
+  - override /processes: [smb, iceflow, bench_sync_flow, time, thk, bench_sync_thk, bench_timer]
+  - override /outputs: [local]

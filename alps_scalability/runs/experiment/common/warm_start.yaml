@@ -1,0 +1,12 @@
+# @package _global_
+# Overlay for the warm-start accuracy runs: start from the reference state at t = 300 yr and run to 500 yr.
+# The input file (data/warm_local_rNN.nc, already at the target resolution) is set by repro/20_accuracy.sh.
+inputs:
+  local:
+    coarsening:
+      ratio: 1
+processes:
+  time:
+    start: 300.0
+    end: 500.0
+    save: 50.0

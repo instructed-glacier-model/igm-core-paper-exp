@@ -1,0 +1,36 @@
+{
+ "date": "2026-10-20T12:17:03",
+ "host": "gpu node (RTX 4090)",
+ "device": "gpu",
+ "tag": "rtx4090_local",
+ "ratios": [
+  60,
+  40,
+  32,
+  24,
+  16,
+  12,
+  8,
+  6,
+  5,
+  4,
+  3,
+  2
+ ],
+ "extra_overrides": [
+  "processes.iceflow.numerics.basis_horizontal=central"
+ ],
+ "experiment": "params_bench",
+ "igm_dir": "igm",
+ "igm_branch": "bench-v3.2.1",
+ "igm_commit": "v3.2.1-0-g30937bcf",
+ "igm_dirty_files": [],
+ "cpu_model": "Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz",
+ "cpu_count": 12,
+ "gpu_index": 0,
+ "gpu_name": "NVIDIA GeForce RTX 4090",
+ "gpu_mem_mib": 24564,
+ "driver": "580.178.04",
+ "tensorflow": "2.17.0",
+ "keras": "3.14.1"
+}

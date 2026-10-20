@@ -1,0 +1,62 @@
+# @package _global_
+
+# Aletsch Glacier 1880-2020. Parameter values below = knee trial #259 of analysis/optuna.db.
+# Ice flow: offline pretrained emulator (experiment/common/iceflow_offline.yaml), Weertman sliding.
+# SMB: user modules clim_aletsch + smb_accmelt. Misfits: track_dem_rmse, track_velsurf_union.
+
+defaults:
+  - common: iceflow_offline
+
+  - /user/conf/processes@processes:
+      - smb_accmelt
+      - clim_aletsch
+      - track_dem_rmse
+      - track_velsurf_union
+
+  - override /inputs:
+    - local
+  - override /processes:
+    - track_dem_rmse
+    - track_velsurf_union
+    - clim_aletsch
+    - smb_accmelt
+    - iceflow
+    - time
+    - thk
+  - override /outputs:
+    - local
+
+inputs:
+  local:
+    filename: input.nc
+
+processes:
+  smb_accmelt:
+    weight_accumulation: 1.2960883038626383
+    weight_ablation: 1.5142622188503112
+    weight_Aletschfirn: 1.5106058088885166
+    weight_Jungfraufirn: 1.0711381883732063
+    weight_Ewigschneefeld: 1.0871638578709781
+  iceflow:
+    physics:
+      sliding:
+        tau_ref: 0.3784243908459266   # MPa at u_ref
+        u_ref: 100.0               # m/yr (required by the pretrained emulator)
+  time:
+    start: 1880.0
+    end: 2020.0
+    save: 1.0                  # IGM cuts dt at save times: the scores depend on this value
+
+outputs:
+  local:
+    output_file: output.nc
+    output_ts_file: output_ts.nc
+    write_ts: True
+    vars_to_save:
+      - topg
+      - usurf
+      - thk
+      - smb
+      - velsurf_mag
+      - uvelsurf
+      - vvelsurf

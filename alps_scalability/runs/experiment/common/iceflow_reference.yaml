@@ -1,0 +1,22 @@
+# @package _global_
+# REFERENCE ice flow: the Blatter-Pattyn energy minimised directly on the velocity field (identity mapping,
+# no network) with L-BFGS, 50 iterations per step. Nz = 2 MOLHO, as every run of this experiment.
+processes:
+  iceflow:
+    method: unified
+    numerics:
+      Nz: 2
+      basis_horizontal: q1
+      basis_vertical: molho
+    unified:
+      mapping: identity
+      optimizer: lbfgs
+      nbit: 50
+      nbit_init: 50
+      retrain_freq: 1
+      lbfgs:
+        memory: 10
+        alpha_min: 0.0
+      line_search: hager-zhang
+      data_preparation:
+        framesizemax: 99999

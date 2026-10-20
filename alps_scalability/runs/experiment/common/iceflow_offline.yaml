@@ -1,0 +1,20 @@
+# @package _global_
+# OFFLINE ice flow: the pretrained network dahunet_mini shipped with IGM (MOLHO, Nz = 2), frozen,
+# inference only. Trained on mountain glaciers at 50-250 m.
+processes:
+  iceflow:
+    method: unified
+    numerics:
+      Nz: 2
+      basis_horizontal: q1
+      basis_vertical: molho
+    unified:
+      mapping: network
+      inputs: [thk, usurf, arrhenius, tau_ref, dX]
+      nbit_init: 0
+      retrain_freq: 0
+      network:
+        pretrained_path: "dahunet_mini.keras"
+        pretrained: true
+      data_preparation:
+        framesizemax: 99999    # full frame

@@ -1,0 +1,6 @@
+# Inputs and per-run metrics (results/) are shipped; raw runs (outputs/) are not: repro/10-20 recreate them
+!*.nc
+results/*/stats_r*.txt
+results/*/steptimes_r*.json
+igm/
+output_save/

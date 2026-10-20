@@ -1,0 +1,36 @@
+# @package _global_
+# Shared body of the accuracy runs on the 160 x 134 km sub-domain (data/input_crop.nc, 1611 x 1338 @ 100 m):
+# same forcing and time stepping as the scalability sweep; only the ice-flow fragment differs.
+core:
+  url_data: ""
+  logging: True
+  tf_logging_level: 30
+  print_comp: True
+inputs:
+  local:
+    filename: ${hydra:runtime.cwd}/data/input_crop.nc
+    coarsening:
+      ratio: 3               # set per run: 12 / 6 / 3 -> 1200 / 600 / 300 m
+processes:
+  time:
+    start: 0.0
+    end: 500.0
+    save: 50.0               # 11 snapshots
+    cfl: 0.3
+    cfl_percentile: 100.0
+    step_max: 1.0
+  smb:
+    method: simple
+    simple:
+      array:
+        - ['time', 'gradabl', 'gradacc', 'ela', 'accmax']
+        - [0,   0.009, 0.005, 2300, 2.0]
+        - [500, 0.009, 0.005, 2300, 2.0]
+  iceflow:
+    physics:
+      sliding:
+        u_ref: 100.0
+        tau_ref: 0.2153697218796329   # IGM default; same drag as the scalability sweep
+outputs:
+  local:
+    vars_to_save: [topg, usurf, thk, velbar_mag, velsurf_mag, uvelsurf, vvelsurf]

@@ -1,0 +1,21 @@
+# IGM / Hydra run outputs (shipped only where an experiment's runs/.gitignore allows it)
+outputs/
+multirun/
+*/runs/**/*.nc
+*/runs/**/*.tif
+*/runs/**/*.db
+*/runs/**/*.pkl
+
+# large data formats
+*.h5
+*.zarr/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Figures written by the figure scripts
+*/figure/*.pdf
+*/figure/*.png
+*/figure/*.svg

@@ -1,0 +1,25 @@
+{
+ "date": "2026-10-20T12:26:40",
+ "host": "cpu node",
+ "device": "cpu",
+ "tag": "cpu55_local",
+ "ratios": [
+  32,
+  16,
+  8,
+  4
+ ],
+ "extra_overrides": [
+  "processes.time.end=20",
+  "processes.iceflow.numerics.basis_horizontal=central"
+ ],
+ "experiment": "params_bench",
+ "igm_dir": "igm",
+ "igm_branch": "bench-v3.2.1",
+ "igm_commit": "v3.2.1-0-g30937bcf",
+ "igm_dirty_files": [],
+ "cpu_model": "Intel(R) Xeon(R) CPU E5-2683 v4 @ 2.10GHz",
+ "cpu_count": 32,
+ "tensorflow": "2.17.0",
+ "keras": "3.14.1"
+}

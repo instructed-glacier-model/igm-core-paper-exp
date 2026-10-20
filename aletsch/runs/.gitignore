@@ -1,0 +1,4 @@
+# input data and the sweep database are shipped
+!*.nc
+!*.db
+__pycache__/

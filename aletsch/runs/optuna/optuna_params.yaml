@@ -1,0 +1,64 @@
+# NSGA-II sweep of the Aletsch calibration (launched by workflow/01_sweep.sh).
+# Objectives, written by the user modules into _igm_score.json:
+#   cost_usurf_rmse    : mean over 1926..2017 of the DEM RMSE on observed ∪ modelled ice (m)
+#   cost_velsurf_union : RMSE of the 2020 surface speed on all valid observed pixels (m/yr)
+
+objectives:
+  - name: cost_usurf_rmse
+    direction: minimize
+  - name: cost_velsurf_union
+    direction: minimize
+
+# n_trials per worker (10 workers x 60); n_jobs must stay 1
+n_trials: 60
+n_jobs: 1
+gpu_allow_growth: true
+
+storage: sqlite:///analysis/optuna_rerun.db
+study_name: aletsch_rerun
+
+sampler:
+  method: NSGAIISampler
+  population_size: 24
+  mutation_prob: 0.1
+  crossover_prob: 0.9
+
+parameters:
+  # SMB scaling factors.
+  - name: processes.smb_accmelt.weight_accumulation
+    type: float
+    low: 0.5
+    high: 3.0
+    log: false
+
+  - name: processes.smb_accmelt.weight_ablation
+    type: float
+    low: 0.5
+    high: 3.0
+    log: false
+
+  # Basal shear stress (MPa) at u_ref = 100 m/yr.
+  - name: processes.iceflow.physics.sliding.tau_ref
+    type: float
+    low: 0.08
+    high: 0.5
+    log: false
+
+  # Accumulation-basin weights w_b (data/bassin.nc): accumulation x (2 + w_b)/3 in basin b.
+  - name: processes.smb_accmelt.weight_Aletschfirn
+    type: float
+    low: 0.4
+    high: 1.6
+    log: false
+
+  - name: processes.smb_accmelt.weight_Jungfraufirn
+    type: float
+    low: 0.4
+    high: 1.6
+    log: false
+
+  - name: processes.smb_accmelt.weight_Ewigschneefeld
+    type: float
+    low: 0.4
+    high: 1.6
+    log: false
