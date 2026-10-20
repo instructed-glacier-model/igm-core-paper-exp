@@ -1,0 +1,30 @@
+# @package _global_
+#
+# Ice-flow setup shared by both steps: MOLHO solved directly (identity mapping, no neural
+# network). MOLHO represents the vertical profile analytically, so Nz = 2 suffices.
+processes:
+  iceflow:
+    method: unified
+    numerics:
+      Nz: 2
+      vert_spacing: 4.0
+      basis_vertical: molho
+      basis_horizontal: q1
+    physics:
+      viscosity:
+        arrhenius: 78.0   # MPa^-3 a^-1; overwritten by the `arrhenius` process
+      sliding:
+        tau_ref: 0.325    # MPa, basal shear stress at u_ref
+        u_ref: 500.0      # m/yr
+    unified:
+      mapping: identity
+      optimizer: lbfgs
+      nbit: 20            # iterations per re-solve, warm-started from the last solution
+      nbit_init: 200      # iterations for the very first solve, from rest
+      retrain_freq: 5     # re-solve every 5 time steps
+      lbfgs:
+        memory: 10
+        alpha_min: 0.0
+      line_search: hager-zhang
+      data_preparation:
+        framesizemax: 99999

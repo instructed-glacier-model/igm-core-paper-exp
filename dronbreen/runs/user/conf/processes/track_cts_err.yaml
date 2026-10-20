@@ -1,0 +1,8 @@
+# Selects the observation files data/<data_dir>/cts_<glacier_name>-<year_obs>*.csv
+glacier_name: "dronbreen"
+
+# Survey year of the GPR campaign to compare against.
+year_obs: 2022
+
+# Observation folder, relative to core.folder_data (resolved from the launch directory).
+data_dir: "cts_gpr"

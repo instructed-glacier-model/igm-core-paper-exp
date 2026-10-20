@@ -1,0 +1,35 @@
+# Optuna study of Step 2: minimises cost_cts (mean CTS RMSE over the ten GPR lines,
+# written by `track_cts_err`) over the refreezing proxy (T_ela, ela) and the geothermal flux.
+
+objectives:
+  - name: cost_cts
+    direction: minimize
+
+n_trials: 64
+n_jobs: 3            # concurrent runs on one GPU
+gpu_allow_growth: true
+
+storage: sqlite:///optuna_cts.db
+study_name: dronbreen_cts
+
+sampler:
+  method: TPESampler
+
+parameters:
+  - name: processes.clim_carra_ela.T_ela
+    type: float
+    low: -0.5
+    high: 2.0
+    log: false
+
+  - name: processes.clim_carra_ela.ela
+    type: float
+    low: 650.0
+    high: 720.0
+    log: false
+
+  - name: processes.enthalpy.thermal.basal_heat_flux_ref
+    type: float
+    low: 0.030        # W m^-2
+    high: 0.080
+    log: false

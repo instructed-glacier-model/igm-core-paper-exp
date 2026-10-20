@@ -1,0 +1,6 @@
+optuna_cts.db
+climate_ref.nc
+*.log
+
+# Input data ships with the repository, despite the repository-level */runs/**/*.nc rule
+!data/*.nc

@@ -1,0 +1,30 @@
+# Rebuild the air temperature fields every update_freq years.
+update_freq: 1
+
+# Space-independent standard deviation of the daily temperature variability (K).
+air_temperature_stdev: 3.978
+
+# Build a cosine seasonal cycle between the mean annual and mean summer fields.
+cosine_yearly_cycle_temp: True
+
+# Flip the seasonal cycle and the start of the hydrological year.
+southern_hemisphere_climate: False
+
+# Write the reference monthly cycle to climate_ref.nc, for inspection.
+export_climate_ref: False
+
+# Apply the temperature offsets of climate_change_array over time.
+time_dependent_climate: False
+
+# Piecewise-linear temperature offset (K), used only when time_dependent_climate is
+# True. The default holds the climate constant.
+climate_change_array:
+  - ["time", "temperature_offset"]
+  - [    0,                  0.0]
+
+# Equilibrium line altitude (m) above which the refreezing proxy applies.
+ela: 675
+
+# Constant air temperature (deg C) imposed above the ELA: proxy for the latent heat of
+# meltwater refreezing in the firn, which IGM does not model.
+T_ela: 1.5

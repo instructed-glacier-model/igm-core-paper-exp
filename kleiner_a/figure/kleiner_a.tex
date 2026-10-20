@@ -1,0 +1,91 @@
+\begin{tikzpicture}[/pgfplots/tick scale binop=\times]
+\begin{groupplot}[
+  group style={group size=1 by 3,vertical sep=0.3cm},
+  height=3.75cm,
+  width=6cm,
+  grid=major,
+  ylabel near ticks,
+  xmin=0,
+  xmax=300,
+  ymin=0,
+  ymax=1,
+  xmode=linear,
+  ymode=linear,
+  tick label style={font=\sffamily\footnotesize\sansmath},
+  label style={font=\sffamily\footnotesize\sansmath},
+  title style={color=blue_t,font=\sffamily\small\sansmath},
+  legend style={font=\sffamily\sansmath},
+]
+\nextgroupplot[
+    xlabel={},
+    ylabel={Basal temperature\\ (°C)},
+ylabel style={align=center,at={(axis description cs:-0.12,0.5)},anchor=south},
+  ymin=-30,
+  ymax=0,
+  xticklabels={},
+      legend entries={
+    {Reference},
+    {IGM},
+    },
+    legend cell align={left},
+    legend columns=1,
+    legend style={nodes={scale=.7, transform shape},at={(0.99,0.03)},anchor=south east}
+]
+\addlegendimage{blue_t, smooth, very thick}
+\addlegendimage{black, smooth, dashed, very thick}
+\addplot [blue_t, smooth, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{y},
+  x expr=\thisrow{x}/1000
+] {data/kleiner_exp_a_reference_tb.csv};
+\addplot [black, smooth, dashed, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{T_base_C},
+  x expr=\thisrow{time_yr}/1000,
+] {data/kleiner_exp_a_results.csv};
+\nextgroupplot
+[
+    xlabel={},
+ylabel={Basal melt rate\\ (mm\,yr$^{-1}$)},
+ylabel style={align=center,at={(axis description cs:-0.12,0.5)},anchor=south},
+  ymin=-4.0,
+  ymax=4.0,
+  xticklabels={},
+]
+\addplot [blue_t, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{y},
+  x expr=\thisrow{x}/1000
+] {data/kleiner_exp_a_reference_aw.csv};
+\addplot [black, smooth, dashed, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{melt_rate_m_per_yr}*1000*910/1000,
+  x expr=\thisrow{time_yr}/1000,
+] {data/kleiner_exp_a_results.csv};
+\nextgroupplot
+[
+    ylabel={Water thickness\\ (m)},
+ylabel style={align=center,at={(axis description cs:-0.12,0.5)},anchor=south},
+  ymin=-5,
+  ymax=160,
+      xlabel={Time (kyr)},
+    ]
+    \addplot [blue_t, smooth, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{y},
+  x expr=\thisrow{x}/1000
+] {data/kleiner_exp_a_reference_hw.csv};
+\addplot [black, smooth, dashed, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{till_water_m},
+  x expr=\thisrow{time_yr}/1000,
+] {data/kleiner_exp_a_results.csv};
+
+\end{groupplot}
+\end{tikzpicture}

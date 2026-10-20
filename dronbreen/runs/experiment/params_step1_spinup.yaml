@@ -1,0 +1,74 @@
+# @package _global_
+
+# Step 1: thermal spin-up of Drønbreen from 1900 to 2022 under a constant climate, on a
+# fixed geometry (no `thk` process): only the thermal state evolves.
+#
+#   igm_run +experiment=params_step1_spinup
+
+defaults:
+  - common: iceflow_molho
+  - /user/conf/processes@processes.clim_carra_ela: clim_carra_ela
+  - override /inputs:
+    - local
+  - override /processes:
+    # `arrhenius` and `subglacial_hydrology` (till_storage) need `enthalpy` to run first.
+    - clim_carra_ela          # surface air temperature -> enthalpy boundary condition
+    - iceflow
+    - enthalpy                # E, E_pmp, T, omega
+    - arrhenius               # flow factor from temperature -> iceflow
+    - subglacial_hydrology    # till water storage -> effective pressure
+    - time
+  - override /outputs:
+    - local
+
+inputs:
+  local:
+    filename: input_dronbreen.nc
+
+processes:
+  # Best trial of the Step 2 calibration (mean CTS misfit 18.8 m).
+  clim_carra_ela:
+    ela: 666.0         # m a.s.l.
+    T_ela: 0.42        # deg C imposed above the ELA (refreezing proxy)
+
+  enthalpy:
+    numerics:
+      Nz: 30
+      vert_spacing: 4.0  # packs layers towards the bed
+    thermal:
+      basal_heat_flux_ref: 0.044   # W m^-2, from the Step 2 calibration
+    surface:
+      T_offset: 0.0
+
+  arrhenius: {}
+
+  subglacial_hydrology:
+    mode: till_storage         # Bueler & van Pelt (2015)
+    till_storage:
+      h_water_till_max: 2.0    # m
+      drainage_rate: 0.001     # m/yr
+      N_ref: 1.0e-3            # MPa
+      e_ref: 0.69
+      C_c: 0.12
+      delta: 0.02
+
+  time:
+    start: 1900.0
+    end: 2022.0
+    save: 20.0
+
+outputs:
+  local:
+    vars_to_save:
+      - topg
+      - usurf
+      - thk
+      - icemask
+      - uvelsurf
+      - vvelsurf
+      - velsurf_mag
+      - arrhenius
+      - E
+      - E_pmp
+      - T
+      - omega

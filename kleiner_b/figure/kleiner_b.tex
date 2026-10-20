@@ -1,0 +1,89 @@
+\begin{tikzpicture}[/pgfplots/tick scale binop=\times]
+\begin{groupplot}[
+  group style={group size=3 by 1,horizontal sep=0.3cm},
+  height=4.75cm,
+  width=3.75cm,
+  grid=major,
+    xlabel style={at={(axis description cs:0.5,-0.30)},anchor=south},
+  ylabel near ticks,
+  xmin=0,
+  xmax=1,
+  ymin=0,
+  ymax=1,
+  xmode=linear,
+  ymode=linear,
+  tick label style={font=\sffamily\footnotesize\sansmath},
+  label style={font=\sffamily\footnotesize\sansmath},
+  title style={color=blue_t,font=\sffamily\small\sansmath},
+  legend style={font=\sffamily\sansmath},
+]
+\nextgroupplot[
+    xlabel={Enthalpy (kJ\,kg$^{-1}$)},
+    ylabel={Normalized elevation},
+  xmin=94,
+  xmax=108,
+]
+\addplot [blue_t, smooth, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{z_m}/200,
+  x expr=\thisrow{E_J_per_kg}/1000
+] {data/kleiner_exp_b_analytical.csv};
+\addplot [black, smooth, dashed, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{z_m}/200,
+  x expr=\thisrow{E_J_per_kg}/1000
+] {data/kleiner_exp_b_results.csv};
+
+\nextgroupplot
+[
+    xlabel={Temperature (°C)},
+  xmin=-3,
+  xmax=0.5,
+  yticklabels={},
+]
+\addplot [blue_t, smooth, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{z_m}/200,
+  x expr=\thisrow{T_C}
+] {data/kleiner_exp_b_analytical.csv};
+\addplot [black, smooth, dashed, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{z_m}/200,
+  x expr=\thisrow{T_C}
+] {data/kleiner_exp_b_results.csv};
+
+\nextgroupplot
+[
+    xlabel={Water content (\%)},
+  xmin=-0.5,
+  xmax=3,
+    yticklabels={},
+    legend entries={
+    {Reference},
+    {IGM},
+    },
+    legend cell align={left},
+    legend columns=1,
+    legend style={nodes={scale=.7, transform shape},at={(0.98,0.98)},anchor=north east}
+    ]
+\addlegendimage{blue_t, smooth, very thick}
+\addlegendimage{black, smooth, dashed, very thick}
+\addplot [blue_t, smooth, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{z_m}/200,
+  x expr=\thisrow{omega_pct}
+] {data/kleiner_exp_b_analytical.csv};
+\addplot [black, smooth, dashed, very thick]
+table [
+  col sep=comma,
+  y expr=\thisrow{z_m}/200,
+  x expr=\thisrow{omega_pct}
+] {data/kleiner_exp_b_results.csv};
+
+\end{groupplot}
+\end{tikzpicture}

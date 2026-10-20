@@ -1,0 +1,67 @@
+\begin{tikzpicture}[/pgfplots/tick scale binop=\times]
+\begin{groupplot}[
+  group style={group size=4 by 1},
+  height=4.75cm,
+  width=4.75cm,
+  grid=major,
+  xlabel near ticks,
+  ylabel near ticks,
+  xmin=0,
+  xmax=1,
+  ymin=0,
+  ymax=120,
+  xmode=linear,
+  ymode=linear,
+  tick label style={font=\sffamily\footnotesize\sansmath},
+  label style={font=\sffamily\footnotesize\sansmath},
+  title style={color=blue_t,font=\sffamily\small\sansmath},
+  legend style={font=\sffamily\sansmath},
+  xlabel={Normalized position},
+]
+\nextgroupplot[
+    title={(a)~$L=20\,$km},
+    ylabel={Velocity (m\,yr$^{-1}$)},
+    ymin=0,
+    ymax=60,
+]
+\addplot [blue_t, smooth, very thick] table [col sep=comma,x=x, y=v] {data/exp_b_unified_20km_identity_lbfgs_ref.csv};
+\addplot [black, smooth, dashed, very thick] table [col sep=comma,x=x, y=v] {data/exp_b_unified_20km_identity_lbfgs_igm.csv};
+
+\nextgroupplot
+[
+    title={(b)~$L=40\,$km},
+    ymin=0,
+    ymax=80,
+]
+\addplot [blue_t, smooth, very thick] table [col sep=comma,x=x, y=v] {data/exp_b_unified_40km_identity_lbfgs_ref.csv};
+\addplot [black, smooth, dashed, very thick] table [col sep=comma,x=x, y=v] {data/exp_b_unified_40km_identity_lbfgs_igm.csv};
+
+\nextgroupplot
+[
+    title={(c)~$L=80\,$km},
+    ymin=0,
+    ymax=120,
+]
+\addplot [blue_t, smooth, very thick] table [col sep=comma,x=x, y=v] {data/exp_b_unified_80km_identity_lbfgs_ref.csv};
+\addplot [black, smooth, dashed, very thick] table [col sep=comma,x=x, y=v] {data/exp_b_unified_80km_identity_lbfgs_igm.csv};
+
+\nextgroupplot
+[
+    title={(d)~$L=160\,$km},
+    ymin=0,
+    ymax=120,
+    legend entries={
+    {Reference},
+    {IGM},
+    },
+    legend cell align={left},
+    legend columns=1,
+    legend style={nodes={scale=.7, transform shape},at={(0.02,0.98)},anchor=north west}
+    ]
+\addlegendimage{blue_t, smooth, very thick}
+\addlegendimage{black, smooth, dashed, very thick}
+\addplot [blue_t, smooth, very thick] table [col sep=comma,x=x, y=v] {data/exp_b_unified_160km_identity_lbfgs_ref.csv};
+\addplot [black, smooth, dashed, very thick] table [col sep=comma,x=x, y=v] {data/exp_b_unified_160km_identity_lbfgs_igm.csv};
+
+\end{groupplot}
+\end{tikzpicture}
